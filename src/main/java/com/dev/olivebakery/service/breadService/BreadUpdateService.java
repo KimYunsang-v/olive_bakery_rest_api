@@ -102,22 +102,26 @@ public class BreadUpdateService {
 
     /* 빵 삭제 */
     public Bread deleteBread(String name){
-        Optional<Bread> breadOptional = breadRepository.findByName(name);
-        breadOptional.get().deleteBread(true);
-        return breadRepository.save(breadOptional.get());
+        Bread bread = breadRepository.findByName(name)
+                .orElseThrow(() -> new UserDefineException("해당 빵이 존재하지 않습니다."));
+
+        bread.deleteBread(true);
+        return breadRepository.save(bread);
     }
 
     /* 빵 상태 수정 */
     public Bread updateBreadState(BreadDto.BreadUpdateState breadUpdateState){
-        Optional<Bread> breadOptional = breadRepository.findByName(breadUpdateState.getName());
-        breadOptional.get().updateBreadState(breadUpdateState.getBreadState());
-        return breadRepository.save(breadOptional.get());
+        Bread bread = breadRepository.findByName(breadUpdateState.getName())
+                .orElseThrow(() -> new UserDefineException("해당 빵이 존재하지 않습니다."));
+        bread.updateBreadState(breadUpdateState.getBreadState());
+        return breadRepository.save(bread);
     }
 
     /* 빵 매진 상태 변경 */
     public Bread updateBreadSoldOut(BreadDto.BreadUpdateSoldOut breadUpdateSoldOut){
-        Bread bread = breadRepository.findByName(breadUpdateSoldOut.getName()).get();
-        log.info("매진상태 변경 ---- ");
+        Bread bread = breadRepository.findByName(breadUpdateSoldOut.getName())
+                .orElseThrow(() -> new UserDefineException("해당 빵이 존재하지 않습니다."));
+
         bread.updateBreadSoldOut(breadUpdateSoldOut.getIsSoldOut());
         return breadRepository.save(bread);
     }
