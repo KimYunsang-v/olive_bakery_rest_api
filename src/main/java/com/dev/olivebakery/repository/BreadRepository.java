@@ -1,6 +1,7 @@
 package com.dev.olivebakery.repository;
 
 import com.dev.olivebakery.domain.entity.Bread;
+import com.dev.olivebakery.domain.entity.Ingredients;
 import com.dev.olivebakery.domain.enums.DayType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,4 +30,6 @@ public interface BreadRepository extends JpaRepository<Bread, Long> {
     @Query("select b from Bread b where b.name in :names")
     List<Bread> findAllByByNameInQuery(@Param(value = "names") List<String> names);
 
+//    @Query("select b from Bread b, Ingredients i where b.ingredientsList in :ingredients")
+//    List<Bread> findAllByIngredientsList(@Param(value = "ingredients") Ingredients ingredients);
 }
