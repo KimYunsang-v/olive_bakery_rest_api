@@ -31,7 +31,6 @@ public class IngredientsService {
         ingredientsDtoList.forEach(ingredientsDto -> {
             ingredientsList.add(checkIngredientsRepository(ingredientsBuilder(ingredientsDto)));
         });
-
         return ingredientsList;
     }
 
