@@ -3,7 +3,7 @@
 ## Structure
 ![structure](./img/structure.png)
 
-구현 사항
+## 구현 사항
 
 1. RESTful API 구현
 - Spring boot framework 사용
