@@ -2,7 +2,9 @@ package com.dev.olivebakery.domain.entity;
 
 import com.dev.olivebakery.domain.enums.BreadState;
 import com.dev.olivebakery.domain.enums.DayType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import lombok.extern.java.Log;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+@Log
 public class Bread {
 
     @Id
@@ -30,9 +33,6 @@ public class Bread {
     private String name;
 
     private Integer price;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bread", fetch = FetchType.LAZY)
-    private List<BreadImage> breadImages = new ArrayList<>();
 
     //상세정보가 아닌 간단한 소개(리스트에서 보내줄 것)
     private String description;
@@ -48,21 +48,17 @@ public class Bread {
     private BreadState state = BreadState.NEW;
 
     // 어떤 재료가 들어가며 재료의 원산지 표기
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bread", fetch = FetchType.LAZY)
-    private List<Ingredients> ingredients = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST,CascadeType.MERGE})
+    @JsonManagedReference
+    @JoinTable(
+            name = "bread_ingredients",
+            joinColumns = @JoinColumn(name = "bread_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredients_id")
+    )
+    private List<Ingredients> ingredientsList = new ArrayList<>();
 
     // 삭제 여부
     private Boolean deleteFlag;
-
-    // 무슨 요일에 파는 빵인지
-    //@ElementCollection(fetch = FetchType.EAGER)
-    //private List<Days> days = new ArrayList<>();
-
-    // 빵이 매진인지. soldout의 날짜가 오늘이면 매진
-//    @OneToOne(fetch = FetchType.EAGER,mappedBy = "bread")
-//    private SoldOut soldOut;
-
-
 
     public void updateName(String newName){
         this.name = newName;
@@ -92,7 +88,20 @@ public class Bread {
         this.deleteFlag = delete;
     }
 
+    public void updateBreadIngredients(List<Ingredients> ingredientsList) {
+        this.ingredientsList = ingredientsList;
+    }
+
     public void addBreadIngredients(Ingredients ingredients) {
-        this.ingredients.add(ingredients);
+        this.ingredientsList.add(ingredients);
+    }
+
+    public void deleteBreadIngredients(Ingredients removeIngredients){
+        this.ingredientsList.forEach(ingredients -> {
+            if(ingredients.getName().equals(removeIngredients.getName()) && ingredients.getOrigin().equals(removeIngredients.getOrigin())){
+                this.ingredientsList.remove(ingredients);
+            }
+        });
+//        this.ingredientsList.remove(ingredients);
     }
 }

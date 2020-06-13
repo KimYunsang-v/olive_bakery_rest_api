@@ -1,11 +1,11 @@
 package com.dev.olivebakery.domain.dto;
 
 
+import com.dev.olivebakery.domain.entity.Days;
 import com.dev.olivebakery.domain.enums.BreadState;
 import com.dev.olivebakery.domain.enums.DayType;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class BreadDto {
     public static class BreadIngredient{
         private String name;
         private String origin;
-        private boolean exist;
+        private Boolean exist;
     }
 
     @Getter
@@ -48,20 +48,22 @@ public class BreadDto {
         private Boolean isSoldOut;
         private BreadState breadState;
         private BreadImageDto breadImage;
+        private List<BreadIngredient> breadIngredientList;
     }
 
     @Getter
     @NoArgsConstructor
     @Builder
     @AllArgsConstructor
-    public static class BreadGetDetail{
-        private String name;
-        private int price;
-        private String picture;
-        private String detailDescription;
-        private List<BreadIngredient> ingredientsList = new ArrayList<>();
-        private Boolean isSoldOut;
-        private BreadState breadState;
+        public static class BreadGetDetail{
+            private String name;
+            private int price;
+            private String detailDescription;
+            private String description;
+            private List<BreadIngredient> ingredientsList;
+            private Boolean isSoldOut;
+            private BreadState breadState;
+            private List<DayType> daysList;
     }
 
     @Getter
@@ -71,11 +73,10 @@ public class BreadDto {
     public static class BreadSave{
         private String name;
         private int price;
-//        private MultipartFile breadImage;
         private String description;
         private String detailDescription;
-        private List<BreadIngredient> ingredientsList = new ArrayList<>();
-        private List<DayType> dayTypes = new ArrayList<>();
+        private List<BreadIngredient> ingredientsList;
+        private List<DayType> dayTypes;
     }
 
     @Getter
@@ -93,10 +94,12 @@ public class BreadDto {
     @AllArgsConstructor
     public static class BreadUpdate {
         private String oldName;
+        private String newName;
         private int price;
         private String description;
         private String detailDescription;
-        private List<BreadIngredient> ingredientsList = new ArrayList<>();
+        private List<BreadIngredient> ingredientsList;
+        private List<DayType> dayTypes;
     }
 
     @Getter
@@ -123,7 +126,7 @@ public class BreadDto {
     @AllArgsConstructor
     public static class BreadUpdateIngredients {
         private String name;
-        private List<BreadIngredient> ingredientsList = new ArrayList<>();
+        private List<BreadIngredient> ingredientsList;
 
 
     }
